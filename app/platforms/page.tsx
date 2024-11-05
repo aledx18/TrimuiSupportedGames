@@ -1,16 +1,15 @@
 import Link from 'next/link'
-import { api } from './api'
 import { Brands } from '@/lib/interfaces/brand'
+import { selectBrands } from '@/db/queries/select'
 
 export default async function Page() {
-  const res: Brands[] = await api.list()
+  const r: Brands[] = await selectBrands()
 
   return (
     <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
       <h1 className='font-semibold'>All Platforms</h1>
-
       <div className='grid auto-rows-min gap-5 md:grid-cols-3'>
-        {res.map((platform) => (
+        {r.map((platform) => (
           <Link
             href={`platforms/${platform.slug}`}
             className='grid grid-cols-1 sm:w-1/2 md:w-1/2 lg:w-full transition-all duration-300 border rounded-lg'

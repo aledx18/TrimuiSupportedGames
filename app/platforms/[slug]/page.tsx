@@ -1,5 +1,6 @@
+import { selectBrandsWithSlug } from '@/db/queries/select'
+import { Brand } from '@/lib/interfaces/brand'
 import Link from 'next/link'
-import { api } from '../api'
 
 export default async function Page({
   params
@@ -8,16 +9,16 @@ export default async function Page({
 }) {
   const { slug } = await params
 
-  const res = await api.fetch(slug)
+  const results: Brand = await selectBrandsWithSlug(slug)
 
   return (
     <div className='flex flex-1 flex-col gap-4 p-4 pt-0'>
-      <h1 className='font-semibold'>{res.name}</h1>
+      <h1 className='font-semibold'>{results.name}</h1>
 
       <div className='grid auto-rows-min gap-5 md:grid-cols-3'>
-        {res.platforms.map((platform) => (
+        {results.platforms.map((platform) => (
           <Link
-            href={`/platforms/${res.slug}/${platform.slug}`}
+            href={`/platforms/${results.slug}/${platform.slug}`}
             className='grid grid-cols-1 sm:w-1/2 md:w-1/2 lg:w-full transition-all duration-300 border rounded-lg'
             key={platform.id}>
             <div className='relative p-3 col-start-1 row-start-1 flex flex-col-reverse transition-all duration-300 rounded-lg bg-gradient-to-t from-[#0c0a09]/100 via-black/50 hover:via-black/0'>
@@ -25,7 +26,7 @@ export default async function Page({
                 <h2 className='text-lg font-bold text-secondary-foreground'>
                   {platform.name}
                 </h2>
-                <p className='text-sm'>{platform.games_count} games</p>
+                <p className='text-sm'>{platform.games_count} Games.</p>
               </div>
 
               <div className='flex gap-1'>
